@@ -4,12 +4,6 @@ import { MOCK_RESULTS } from '../data/lotteries';
 class LotteryService {
   // API interna (Vercel Serverless Function)
   private readonly API_URL = '/api/lotteries';
-  
-  // APIs públicas de respaldo
-  private readonly LOTTERY_SOURCES = [
-    'https://www.lotteryguru.com/colombia-lottery-results',
-    'https://www.multilotto.com/results/colombia-baloto'
-  ];
 
   /**
    * Obtiene todos los resultados de loterías desde la API interna

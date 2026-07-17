@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { LotteryResult } from '../types/lottery';
 import { Calendar, Trophy, Hash, Volume2 } from 'lucide-react';
 import { voiceService } from '../services/voiceService';
