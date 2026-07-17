@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { LotteryResult } from '../types/lottery';
 import { Calendar, Trophy, Hash, Volume2 } from 'lucide-react';
 import { voiceService } from '../services/voiceService';
-import { useState } from 'react';
 
 interface ResultCardProps {
   result: LotteryResult;
@@ -33,7 +33,7 @@ export default function ResultCard({ result, autoSpeak = false }: ResultCardProp
   };
 
   // Auto-hablar si está habilitado
-  React.useEffect(() => {
+  useEffect(() => {
     if (autoSpeak && voiceService.isSynthesisSupported()) {
       const speechText = voiceService.formatResultForSpeech(result);
       voiceService.speak(speechText);

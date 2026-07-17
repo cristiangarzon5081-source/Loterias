@@ -2,22 +2,41 @@ import { LotteryResult } from '../types/lottery';
 import { MOCK_RESULTS } from '../data/lotteries';
 
 class LotteryService {
-  // En producción, esta URL apuntaría a una API real
-  // Por ejemplo: https://api.loterias.co/v1/resultados
-  private readonly API_URL = 'https://api.loterias.co/v1';
+  // API interna (Vercel Serverless Function)
+  private readonly API_URL = '/api/lotteries';
+  
+  // APIs públicas de respaldo
+  private readonly LOTTERY_SOURCES = [
+    'https://www.lotteryguru.com/colombia-lottery-results',
+    'https://www.multilotto.com/results/colombia-baloto'
+  ];
 
   /**
-   * Obtiene todos los resultados de loterías
+   * Obtiene todos los resultados de loterías desde la API interna
    */
   async getAllResults(): Promise<LotteryResult[]> {
     try {
-      // En producción, usarías: const response = await fetch(`${this.API_URL}/resultados`);
-      // Por ahora, retornamos datos mock
-      return this.getMockResults();
+      // Intentar con la API interna primero (Vercel Function)
+      const response = await fetch(this.API_URL, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data.length > 0) {
+          console.log('✅ Datos obtenidos de API interna');
+          return data.data;
+        }
+      }
     } catch (error) {
-      console.error('Error fetching lottery results:', error);
-      return this.getMockResults();
+      console.warn('⚠️ API interna no disponible, usando datos mock');
     }
+
+    // Fallback a datos mock
+    return this.getMockResults();
   }
 
   /**
