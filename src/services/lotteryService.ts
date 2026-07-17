@@ -2,15 +2,20 @@ import { LotteryResult } from '../types/lottery';
 import { MOCK_RESULTS } from '../data/lotteries';
 
 class LotteryService {
-  // API interna (Vercel Serverless Function)
-  private readonly API_URL = '/api/lotteries';
+  // API de scraping (resultados REALES en tiempo real)
+  private readonly API_URL = '/api/scrape-results';
+  
+  // Fallback a datos estáticos solo si falla el scraping
+  private readonly STATIC_API_URL = '/api/lotteries';
 
   /**
-   * Obtiene todos los resultados de loterías desde la API interna
+   * Obtiene todos los resultados de loterías desde scraping en tiempo real
    */
   async getAllResults(): Promise<LotteryResult[]> {
     try {
-      // Intentar con la API interna primero (Vercel Function)
+      // Intentar con scraping en tiempo real primero
+      console.log('🔍 Obteniendo resultados reales via scraping...');
+      
       const response = await fetch(this.API_URL, {
         method: 'GET',
         headers: {
@@ -21,15 +26,34 @@ class LotteryService {
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data.length > 0) {
-          console.log('✅ Datos obtenidos de API interna');
+          console.log(`✅ ${data.count} resultados reales obtenidos desde ${data.source}`);
           return data.data;
         }
       }
+      
+      console.warn('⚠️ Scraping no disponible, intentando con API estática...');
+      
+      // Fallback a API estática
+      const staticResponse = await fetch(this.STATIC_API_URL, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (staticResponse.ok) {
+        const staticData = await staticResponse.json();
+        if (staticData.success && staticData.data.length > 0) {
+          console.log('📦 Usando datos estáticos');
+          return staticData.data;
+        }
+      }
     } catch (error) {
-      console.warn('⚠️ API interna no disponible, usando datos mock');
+      console.error('❌ Error fetching lottery results:', error);
     }
 
-    // Fallback a datos mock
+    // Último recurso: datos mock
+    console.warn('⚠️ Usando datos mock como último recurso');
     return this.getMockResults();
   }
 
