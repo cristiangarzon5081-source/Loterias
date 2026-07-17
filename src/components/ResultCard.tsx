@@ -10,6 +10,9 @@ interface ResultCardProps {
 
 export default function ResultCard({ result, autoSpeak = false }: ResultCardProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  
+  // Verificar si el resultado está pendiente
+  const isPending = result.number === 'PENDIENTE' || result.number.includes('PENDIENTE');
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -32,13 +35,13 @@ export default function ResultCard({ result, autoSpeak = false }: ResultCardProp
     }
   };
 
-  // Auto-hablar si está habilitado
+  // Auto-hablar si está habilitado (solo si no está pendiente)
   useEffect(() => {
-    if (autoSpeak && voiceService.isSynthesisSupported()) {
+    if (autoSpeak && !isPending && voiceService.isSynthesisSupported()) {
       const speechText = voiceService.formatResultForSpeech(result);
       voiceService.speak(speechText);
     }
-  }, [autoSpeak, result]);
+  }, [autoSpeak, result, isPending]);
 
   const getBadgeColor = (type: string) => {
     switch (type) {
@@ -95,8 +98,42 @@ export default function ResultCard({ result, autoSpeak = false }: ResultCardProp
         </button>
       </div>
 
-      <div className="space-y-4">
-        {result.type === 'baloto' ? (
+      {/* Mostrar alerta si el resultado está pendiente */}
+      {isPending && result.status && (
+        <div className="mb-4 bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4">
+          <div className="flex items-start space-x-2">
+            <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-yellow-900">Sorteo Pendiente</p>
+              <p className="text-sm text-yellow-800 mt-1">{result.status}</p>
+              <p className="text-xs text-yellow-700 mt-2">
+                Los números mostrados son de referencia. Actualiza esta página después del sorteo para ver los resultados reales.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4">{isPending && (
+          <div className="bg-gray-100 rounded-lg p-6 text-center">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-gray-700 font-semibold mb-2">Resultado Pendiente</p>
+            <p className="text-gray-600 text-sm">
+              Este sorteo aún no se ha realizado.
+            </p>
+            {result.status && (
+              <p className="text-gray-700 text-sm font-medium mt-2">
+                {result.status}
+              </p>
+            )}
+          </div>
+        )}
+        
+        {!isPending && result.type === 'baloto' ? (
           <div>
             <div className="flex items-center space-x-2 mb-3">
               <Hash className="w-5 h-5 text-primary-600" />
@@ -128,7 +165,7 @@ export default function ResultCard({ result, autoSpeak = false }: ResultCardProp
               </div>
             )}
           </div>
-        ) : (
+        ) : !isPending && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg p-4 text-white">
               <div className="flex items-center space-x-2 mb-2">

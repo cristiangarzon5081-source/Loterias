@@ -9,6 +9,7 @@ export interface LotteryResult {
   date: string;
   prize?: string;
   superbalotas?: string[];
+  status?: string; // Nuevo: Para mostrar estado del sorteo
 }
 
 export interface Lottery {

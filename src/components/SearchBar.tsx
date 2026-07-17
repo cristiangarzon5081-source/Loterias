@@ -31,7 +31,9 @@ export default function SearchBar({ onSearch, placeholder = 'Buscar lotería, ch
             onSearch(e.target.value);
           }}
           placeholder={placeholder}
-          className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:outline-none transition-colors duration-200 text-lg"
+          className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:outline-none transition-colors duration-200 text-lg text-gray-900 bg-white"
+          autoComplete="off"
+          spellCheck="false"
         />
         {query && (
           <button

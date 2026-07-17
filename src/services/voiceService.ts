@@ -182,7 +182,29 @@ export class VoiceService {
     }
 
     if (result.prize) {
-      speech += `Premio: ${result.prize}.`;
+      // Limpiar el premio para lectura correcta
+      let prizeText = result.prize;
+      
+      // Reemplazar símbolos y abreviaciones
+      prizeText = prizeText.replace(/\$/g, '');  // Quitar $
+      prizeText = prizeText.replace(/\./g, ' '); // Reemplazar puntos por espacios
+      
+      // Agregar "pesos colombianos" si tiene números
+      if (/\d/.test(prizeText)) {
+        if (prizeText.includes('000 000 000')) {
+          // Es en miles de millones
+          const amount = prizeText.split(' ')[0];
+          speech += `Premio mayor: ${amount} mil millones de pesos colombianos.`;
+        } else if (prizeText.includes('000 000')) {
+          // Es en millones
+          const parts = prizeText.split(' ').filter(p => p);
+          speech += `Premio mayor: ${parts.join(' ')} millones de pesos colombianos.`;
+        } else {
+          speech += `Premio: ${prizeText} pesos colombianos.`;
+        }
+      } else {
+        speech += `Premio: ${prizeText}.`;
+      }
     }
 
     return speech;

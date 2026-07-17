@@ -1,95 +1,119 @@
 // API Serverless para obtener resultados de loterías colombianas
-// Este archivo se puede desplegar en Vercel como API serverless
+// ⚠️ IMPORTANTE: Estos son datos de EJEMPLO
+// Debes actualizarlos MANUALMENTE con los resultados reales después de cada sorteo
 
-// Datos actualizados manualmente o mediante scraping programado
+// 📅 FECHAS Y HORARIOS DE SORTEOS:
+// - Cundinamarca: Lunes y Jueves a las 10:30 PM
+// - Bogotá: Martes y Viernes a las 10:30 PM
+// - Medellín: Martes y Viernes a las 10:30 PM
+// - Valle: Miércoles y Sábado a las 10:30 PM
+// - Baloto: Martes y Viernes a las 10:30 PM
+
+// 🔴 ADVERTENCIA: NO uses estos datos antes del sorteo
+// Verifica los resultados oficiales en:
+// - https://www.loteriascundinamarca.com
+// - https://www.loteriabogota.com
+// - https://baloto.com
+
 const LATEST_RESULTS = [
+  // ⚠️ EJEMPLO - Actualizar con datos reales después del sorteo
   {
     id: '1',
     name: 'Lotería de Cundinamarca',
     type: 'loteria',
-    number: '4521',
-    series: '089',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$5.000.000.000'
+    number: 'PENDIENTE',  // ← Cambiar después del sorteo
+    series: '000',         // ← Cambiar después del sorteo
+    date: '2026-07-14',    // ← ÚLTIMA VEZ QUE JUGÓ (Lunes 14 julio)
+    prize: '$5.000.000.000',
+    status: 'Próximo sorteo: Jueves 17 Julio 10:30 PM'
   },
   {
     id: '2',
     name: 'Lotería de Bogotá',
     type: 'loteria',
-    number: '7834',
-    series: '145',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$4.500.000.000'
+    number: 'PENDIENTE',  // ← Cambiar después del sorteo
+    series: '000',         // ← Cambiar después del sorteo
+    date: '2026-07-11',    // ← ÚLTIMA VEZ QUE JUGÓ (Viernes 11 julio)
+    prize: '$4.500.000.000',
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   },
   {
     id: '3',
     name: 'Baloto',
     type: 'baloto',
-    number: '05-12-23-34-41',
-    date: new Date().toISOString().split('T')[0],
+    number: 'PENDIENTE',  // ← Cambiar después del sorteo
+    date: '2026-07-15',    // ← ÚLTIMA VEZ QUE JUGÓ (Martes 15 julio)
     prize: '$18.000.000.000',
-    superbalotas: ['15']
+    superbalotas: ['00'],
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   },
   {
     id: '4',
     name: 'Baloto Revancha',
     type: 'baloto',
-    number: '07-18-25-36-43',
-    date: new Date().toISOString().split('T')[0],
+    number: 'PENDIENTE',
+    date: '2026-07-15',
     prize: '$2.500.000.000',
-    superbalotas: ['09']
+    superbalotas: ['00'],
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   },
   {
     id: '5',
     name: 'Chance Cundinamarca',
     type: 'chance',
-    number: '4521',
-    date: new Date().toISOString().split('T')[0],
-    prize: 'Hasta $7.000.000'
+    number: 'PENDIENTE',
+    date: '2026-07-14',
+    prize: 'Hasta $7.000.000',
+    status: 'Próximo sorteo: Jueves 17 Julio 10:30 PM'
   },
   {
     id: '6',
     name: 'Lotería de Medellín',
     type: 'loteria',
-    number: '3298',
-    series: '067',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$4.800.000.000'
+    number: 'PENDIENTE',
+    series: '000',
+    date: '2026-07-11',
+    prize: '$4.800.000.000',
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   },
   {
     id: '7',
     name: 'Lotería del Valle',
     type: 'loteria',
-    number: '6745',
-    series: '123',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$4.200.000.000'
+    number: 'PENDIENTE',
+    series: '000',
+    date: '2026-07-13',
+    prize: '$4.200.000.000',
+    status: 'Próximo sorteo: Sábado 19 Julio 10:30 PM'
   },
   {
     id: '8',
     name: 'Chance Bogotá',
     type: 'chance',
-    number: '7834',
-    date: new Date().toISOString().split('T')[0],
-    prize: 'Hasta $7.000.000'
+    number: 'PENDIENTE',
+    date: '2026-07-11',
+    prize: 'Hasta $7.000.000',
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   },
   {
     id: '9',
     name: 'Lotería de Manizales',
     type: 'loteria',
-    number: '1567',
-    series: '092',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$3.900.000.000'
+    number: 'PENDIENTE',
+    series: '000',
+    date: '2026-07-13',
+    prize: '$3.900.000.000',
+    status: 'Próximo sorteo: Sábado 19 Julio 10:30 PM'
   },
   {
     id: '10',
     name: 'Lotería del Cauca',
     type: 'loteria',
-    number: '8923',
-    series: '076',
-    date: new Date().toISOString().split('T')[0],
-    prize: '$3.500.000.000'
+    number: 'PENDIENTE',
+    series: '000',
+    date: '2026-07-11',
+    prize: '$3.500.000.000',
+    status: 'Próximo sorteo: Viernes 18 Julio 10:30 PM'
   }
 ];
 
